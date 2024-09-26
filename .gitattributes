@@ -1,0 +1,9 @@
+# Set all text files to use LF line endings in the repository
+* text=auto
+
+# Force specific files to use LF
+*.js eol=lf
+*.jsx eol=lf
+*.html eol=lf
+*.css eol=lf
+*.json eol=lf
