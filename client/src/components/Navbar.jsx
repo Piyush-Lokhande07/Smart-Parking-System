@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react"; 
 import { Link, useNavigate } from "react-router-dom"; // Import useNavigate for navigation
 import Login from './Login';
 import SignUp from './SignUp';
+import { AuthContext } from './AuthContext'; // Import AuthContext
 
 function Navbar() {
-    const [popupType, setPopupType] = useState("");
-    const [isPopupOpen, setIsPopupOpen] = useState(false);
-    const [popupMessage, setPopupMessage] = useState("");
-    const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login status
-    const navigate = useNavigate(); // Initialize navigate
+    const { isLoggedIn, logout } = useContext(AuthContext); // Get login status and logout function
+    const [popupType, setPopupType] = useState(""); 
+    const [isPopupOpen, setIsPopupOpen] = useState(false); 
+    const [popupMessage, setPopupMessage] = useState(""); 
+    const navigate = useNavigate(); // Initialize useNavigate
 
     const openPopup = (type) => {
         setPopupType(type);
@@ -24,7 +25,7 @@ function Navbar() {
     const handleSuccessMessage = (message, loggedIn = false) => {
         setPopupMessage(message);
         if (loggedIn) {
-            setIsLoggedIn(true); // Update login status
+            // Nothing needed here as we manage login in AuthContext
         }
         setTimeout(() => {
             closePopup(); // Close popup after 3 seconds
@@ -32,15 +33,17 @@ function Navbar() {
     };
 
     const handleLogout = () => {
-        setIsLoggedIn(false); // Reset login status
+        logout(); // Call logout from AuthContext
+        navigate("/"); // Redirect to home after logout
     };
 
-    const handleAddParkingLocationClick = (e) => {
+    const handleAddParkingLocation = () => {
         if (!isLoggedIn) {
-            e.preventDefault(); // Prevent navigation to the route if not logged in
-            setPopupMessage("You are not Logged in!");
-            setIsPopupOpen(true);
-            setTimeout(() => setIsPopupOpen(false), 3000); // Auto-close popup after 3 seconds
+            setPopupMessage("You are not Logged in!"); // Show warning message
+            setIsPopupOpen(true); // Open popup
+            setTimeout(() => closePopup(), 3000); // Auto-close after 3 seconds
+        } else {
+            navigate('/add-parking-location'); // Navigate to AddParkingLocation
         }
     };
 
@@ -49,15 +52,7 @@ function Navbar() {
             <nav>
                 <div><Link to="/" className='nav-btn nav-lk'>Home</Link></div>
                 <div><Link to="/about-us" className='nav-btn nav-lk'>About Us</Link></div>
-                <div>
-                    <Link 
-                        to="/add-parking-location" 
-                        className='nav-btn nav-lk' 
-                        onClick={handleAddParkingLocationClick}
-                    >
-                        Add Parking Location
-                    </Link>
-                </div>
+                <button className='nav-btn' onClick={handleAddParkingLocation}>Add Parking Location</button>
                 {isLoggedIn ? (
                     <button className='nav-btn' onClick={handleLogout}>Logout</button>
                 ) : (

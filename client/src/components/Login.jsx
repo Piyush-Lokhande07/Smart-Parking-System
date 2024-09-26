@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { AuthContext } from './AuthContext'; // Import the AuthContext
 
 function Login({ onSuccess }) {
+    const { login } = useContext(AuthContext); // Get the login function from context
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
@@ -18,6 +20,7 @@ function Login({ onSuccess }) {
             const data = await response.json();
 
             if (response.ok) {
+                login(); // Update login state
                 onSuccess("Login Successful", true); // Pass success message and loggedIn state
             } else {
                 setMessage(data.message || "Login failed");

@@ -1,31 +1,17 @@
 // AuthContext.js
-import React, { createContext, useState, useContext } from 'react';
-import axios from 'axios';
+import React, { createContext, useState } from 'react';
 
-const AuthContext = createContext();
+export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
-    const [token, setToken] = useState(null);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    const login = async (username, password) => {
-        const response = await axios.post('/api/auth/login', { username, password });
-        setUser(username);
-        setToken(response.data.token);
-        localStorage.setItem('token', response.data.token);
-    };
-
-    const logout = () => {
-        setUser(null);
-        setToken(null);
-        localStorage.removeItem('token');
-    };
+    const login = () => setIsLoggedIn(true);
+    const logout = () => setIsLoggedIn(false);
 
     return (
-        <AuthContext.Provider value={{ user, token, login, logout }}>
+        <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
             {children}
         </AuthContext.Provider>
     );
 };
-
-export const useAuth = () => useContext(AuthContext);

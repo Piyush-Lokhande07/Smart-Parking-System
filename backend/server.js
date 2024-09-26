@@ -117,6 +117,16 @@ app.post('/api/add-parking-location', async (req, res) => {
     }
 });
 
+app.get('/api/get-verified-locations', async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM parking_locations WHERE verified = true');
+        res.json(result.rows);
+    } catch (error) {
+        console.error("Error fetching verified locations", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+
 
 
 // Start the server
