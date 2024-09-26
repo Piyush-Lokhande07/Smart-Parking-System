@@ -2,12 +2,13 @@ import React from "react";
 import Home from "./Home";
 import AboutUs from "./AboutUs";
 
-
-function Content({aboutUsClicked}){
-    return(
+function Content({ isHomeActive, isAboutUsActive }) {
+    return (
         <div>
-            {!aboutUsClicked ? <Home /> : <AboutUs />}
+            {isHomeActive && <Home />}
+            {isAboutUsActive && <AboutUs />} 
         </div>
-    )
+    );
 }
+
 export default Content;
