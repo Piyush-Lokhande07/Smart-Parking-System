@@ -18,7 +18,7 @@ function Login({ onSuccess }) {
             const data = await response.json();
 
             if (response.ok) {
-                onSuccess("Login Successful"); // Pass message to Navbar
+                onSuccess("Login Successful", true); // Pass success message and loggedIn state
             } else {
                 setMessage(data.message || "Login failed");
             }

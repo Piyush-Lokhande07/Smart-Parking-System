@@ -72,6 +72,53 @@ app.post('/api/auth/login', async (req, res) => {
     }
 });
 
+app.post('/api/add-parking-location', async (req, res) => {
+    const {
+        locationName,
+        completeAddress,
+        pinCode,
+        googleMapUrl,
+        accountHolderName,
+        accountNumber,
+        panNumber, // PAN number comes right after account number
+        ifscCode,
+        branchName,
+        availableSlots
+    } = req.body;
+
+    
+
+    try {
+        const result = await pool.query(
+            `INSERT INTO parking_locations 
+              (location_name, complete_address, pin_code, google_map_url, account_holder_name, 
+              account_number, pan_number, ifsc_code, branch_name, available_slots) 
+              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) 
+              RETURNING id`,
+            [
+                locationName,
+                completeAddress,
+                pinCode,
+                googleMapUrl,
+                accountHolderName,
+                accountNumber,
+                panNumber, 
+                ifscCode,
+                branchName,
+                availableSlots
+            ]
+        );
+
+        // If insertion is successful, send a success response
+        res.status(201).json({ message: 'Process Completed! Your location will be added after verification.' });
+    } catch (error) {
+        console.error('Error inserting parking location:', error);
+        res.status(500).json({ error: 'An error occurred while adding the parking location', details: error.message });
+    }
+});
+
+
+
 // Start the server
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);

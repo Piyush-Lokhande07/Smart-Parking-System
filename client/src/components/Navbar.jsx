@@ -1,12 +1,14 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // Import useNavigate for navigation
 import Login from './Login';
 import SignUp from './SignUp';
 
 function Navbar() {
-    const [popupType, setPopupType] = useState(""); 
-    const [isPopupOpen, setIsPopupOpen] = useState(false); 
-    const [popupMessage, setPopupMessage] = useState(""); // State for popup messages
+    const [popupType, setPopupType] = useState("");
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [popupMessage, setPopupMessage] = useState("");
+    const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login status
+    const navigate = useNavigate(); // Initialize navigate
 
     const openPopup = (type) => {
         setPopupType(type);
@@ -19,11 +21,27 @@ function Navbar() {
         setPopupMessage(""); // Clear message on close
     };
 
-    const handleSuccessMessage = (message) => {
+    const handleSuccessMessage = (message, loggedIn = false) => {
         setPopupMessage(message);
+        if (loggedIn) {
+            setIsLoggedIn(true); // Update login status
+        }
         setTimeout(() => {
             closePopup(); // Close popup after 3 seconds
-        }, 2000);
+        }, 3000); // Adjust time as needed
+    };
+
+    const handleLogout = () => {
+        setIsLoggedIn(false); // Reset login status
+    };
+
+    const handleAddParkingLocationClick = (e) => {
+        if (!isLoggedIn) {
+            e.preventDefault(); // Prevent navigation to the route if not logged in
+            setPopupMessage("You are not Logged in!");
+            setIsPopupOpen(true);
+            setTimeout(() => setIsPopupOpen(false), 3000); // Auto-close popup after 3 seconds
+        }
     };
 
     return (
@@ -31,9 +49,23 @@ function Navbar() {
             <nav>
                 <div><Link to="/" className='nav-btn nav-lk'>Home</Link></div>
                 <div><Link to="/about-us" className='nav-btn nav-lk'>About Us</Link></div>
-                <button className='nav-btn'>Add Parking Location</button>
-                <button className='nav-btn' onClick={() => openPopup("login")}>Login</button>
-                <button className='nav-btn' onClick={() => openPopup("signup")}>Sign Up</button>
+                <div>
+                    <Link 
+                        to="/add-parking-location" 
+                        className='nav-btn nav-lk' 
+                        onClick={handleAddParkingLocationClick}
+                    >
+                        Add Parking Location
+                    </Link>
+                </div>
+                {isLoggedIn ? (
+                    <button className='nav-btn' onClick={handleLogout}>Logout</button>
+                ) : (
+                    <>
+                        <button className='nav-btn' onClick={() => openPopup("login")}>Login</button>
+                        <button className='nav-btn' onClick={() => openPopup("signup")}>Sign Up</button>
+                    </>
+                )}
             </nav>
 
             {isPopupOpen && (

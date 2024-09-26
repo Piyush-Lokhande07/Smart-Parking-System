@@ -21,7 +21,7 @@ function SignUp({ onSuccess }) {
             const data = await response.json();
 
             if (response.ok) {
-                onSuccess("Registered Successfully"); // Pass message to Navbar
+                onSuccess("Registered Successfully", false); 
             } else {
                 setMessage(data.message || "Registration failed");
             }
@@ -33,7 +33,6 @@ function SignUp({ onSuccess }) {
 
     return (
         <form onSubmit={handleSubmit}>
-            {message && <div>{message}</div>} {/* Display message */}
             <div>Enter your name:</div>
             <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
             <div>Enter your phone no:</div>
@@ -45,6 +44,7 @@ function SignUp({ onSuccess }) {
             <div>Enter password:</div>
             <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
             <button className='in-btn' type="submit">Submit</button>
+            {message && <div>{message}</div>} {/* Display message */}
         </form>
     );
 }
