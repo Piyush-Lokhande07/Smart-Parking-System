@@ -220,3 +220,14 @@ button[type="submit"] {
 button[type="submit"]:hover {
   background-color: rgb(14, 14, 192);
 }
+.add-loc-form{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  
+}
+.auto-loc-form form{
+  margin-left: 500px;
+}

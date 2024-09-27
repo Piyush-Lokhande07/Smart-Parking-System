@@ -78,26 +78,28 @@ function AddParkingLocation() {
 
     return (
         <div>
-            <form onSubmit={handleSubmit}>
-                <h2>Add Parking Location</h2>
-                <h3>Location Details</h3>
-                <input type="text" placeholder="Location Name" value={locationName} onChange={(e) => setLocationName(e.target.value)} required />
-                <input type="text" placeholder="Complete Address" value={completeAddress} onChange={(e) => setCompleteAddress(e.target.value)} required />
-                <input type="text" placeholder="Pin Code" value={pinCode} onChange={(e) => setPinCode(e.target.value)} required />
-                <input type="url" placeholder="Google Maps URL" value={googleMapUrl} onChange={(e) => setGoogleMapUrl(e.target.value)} required />
+           <div className='add-loc-form'>
+                <form onSubmit={handleSubmit}>
+                    <h2>Add Parking Location</h2>
+                    <h3>Location Details</h3>
+                    <input type="text" placeholder="Location Name" value={locationName} onChange={(e) => setLocationName(e.target.value)} required />
+                    <input type="text" placeholder="Complete Address" value={completeAddress} onChange={(e) => setCompleteAddress(e.target.value)} required />
+                    <input type="text" placeholder="Pin Code" value={pinCode} onChange={(e) => setPinCode(e.target.value)} required />
+                    <input type="url" placeholder="Google Maps URL" value={googleMapUrl} onChange={(e) => setGoogleMapUrl(e.target.value)} required />
 
-                <h3>Bank Details</h3>
-                <input type="text" placeholder="Account Holder Name" value={accountHolderName} onChange={(e) => setAccountHolderName(e.target.value)} required />
-                <input type="text" placeholder="Account Number" value={accountNumber} onChange={(e) => setAccountNumber(e.target.value)} required />
-                <input type="text" placeholder="PAN Number" value={panNumber} onChange={(e) => setPanNumber(e.target.value)} required />
-                <input type="text" placeholder="IFSC Code" value={ifscCode} onChange={(e) => setIfscCode(e.target.value)} required />
-                <input type="text" placeholder="Branch Name" value={branchName} onChange={(e) => setBranchName(e.target.value)} required />
+                    <h3>Bank Details</h3>
+                    <input type="text" placeholder="Account Holder Name" value={accountHolderName} onChange={(e) => setAccountHolderName(e.target.value)} required />
+                    <input type="text" placeholder="Account Number" value={accountNumber} onChange={(e) => setAccountNumber(e.target.value)} required />
+                    <input type="text" placeholder="PAN Number" value={panNumber} onChange={(e) => setPanNumber(e.target.value)} required />
+                    <input type="text" placeholder="IFSC Code" value={ifscCode} onChange={(e) => setIfscCode(e.target.value)} required />
+                    <input type="text" placeholder="Branch Name" value={branchName} onChange={(e) => setBranchName(e.target.value)} required />
 
-                <h3>Slot Details</h3>
-                <input type="number" placeholder="Number of Available Slots" value={availableSlots} onChange={(e) => setAvailableSlots(e.target.value)} required min="1" />
+                    <h3>Slot Details</h3>
+                    <input type="number" placeholder="Number of Available Slots" value={availableSlots} onChange={(e) => setAvailableSlots(e.target.value)} required min="1" />
 
-                <button type="submit">Submit</button>
-            </form>
+                    <button type="submit">Submit</button>
+                </form>
+           </div>
 
             {isPopupOpen && (
                 <div className="popup">

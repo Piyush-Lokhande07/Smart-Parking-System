@@ -6,6 +6,7 @@ const { Pool } = require('pg');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
+const Razorpay = require('razorpay');
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(cors());
 app.use(bodyParser.json()); // Parse JSON requests
+app.use(express.json());
 
 // PostgreSQL connection
 const pool = new Pool({
@@ -80,7 +82,7 @@ app.post('/api/add-parking-location', async (req, res) => {
         googleMapUrl,
         accountHolderName,
         accountNumber,
-        panNumber, // PAN number comes right after account number
+        panNumber,
         ifscCode,
         branchName,
         availableSlots
@@ -109,7 +111,7 @@ app.post('/api/add-parking-location', async (req, res) => {
             ]
         );
 
-        // If insertion is successful, send a success response
+    
         res.status(201).json({ message: 'Process Completed! Your location will be added after verification.' });
     } catch (error) {
         console.error('Error inserting parking location:', error);
@@ -142,7 +144,46 @@ app.get('/api/location/:locationId', async (req, res) => {
 });
 
 
+app.post("/order",async(req,res)=>{
+    try{
+        const razorpay = new Razorpay({
+            key_id:"rzp_test_TBBRXgPa4yzuqK",
+            key_secret:"3zD9xctvxco5aKNfKaNoaf7D",
+        })
+    
+        const options  =req.body;
+        const order =await razorpay.orders.create(options);
+    
+        if(!order){
+            return res.status(500).send("Error");
+        }
+        res.json(order);
 
+    }catch(err){
+        res.status(500).send(err);
+        console.log(err);
+    }
+})
+
+app.post('/order/validate',async(req,res)=>{
+    const{razorpay_order_id,razorpay_payment_id,razorpay_signature}=req.body;
+
+    const sha =crypto.createHmac("sha256",process.env.KEY_SECRET);
+
+    sha.update(`${razorpay_order_id}|${razorpay_payment_id}`);
+
+    const digest = sha.digest("hex");
+
+    if(digest!==razorpay_signature){
+        return res.status(400).json({msg:"Transaction is not legit!"})
+    }
+
+    res.json({
+        msg:"Success",
+        orderId: razorpay_order_id,
+        paymentId: razorpay_payment_id,
+    });
+})
 
 
 // Start the server
