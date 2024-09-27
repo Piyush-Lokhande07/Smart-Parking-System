@@ -165,7 +165,48 @@ input {
   border: 1px solid #ccc;
   border-radius: 4px;
 }
-
+.about-us{
+  width: 50vw;
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+  justify-self:center;
+  gap: 10px;
+}
+.about-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  
+}
+.Payment-btn{
+  width: 50%;
+}
+.slot-num{
+  font-size: 5rem;
+  text-align: center;
+}
+.slot-info{
+  display: flex;
+  flex-direction: column-reverse;
+  
+}
+.register-location{
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+.reg-location-con{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.reg-b{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 button[type="submit"] {
   background-color: rgb(43, 43, 217);
   color: white;

@@ -2,7 +2,8 @@ import React from "react";
 
 function AboutUs(){
     return (
-        <div class="about-us">
+        <div className="about-container">
+            <div class="about-us">
             <h2>About Us</h2>
             <p>Welcome to [Your Parking System Name], your go-to platform for hassle-free parking solutions!</p>
 
@@ -27,6 +28,7 @@ function AboutUs(){
             </ul>
 
             <p>Thank you for choosing [Your Parking System Name]. We look forward to serving you and enhancing your parking experience!</p>
+        </div>
         </div>
 
     )

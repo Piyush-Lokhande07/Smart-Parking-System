@@ -7,11 +7,13 @@ import Login from './components/Login';
 import SignUp from './components/SignUp';
 import AddParkingLocation from './components/AddParkingLocation';
 import Footer from "./components/Footer";
-import { AuthContext } from './components/AuthContext'; // Import the AuthContext
+import ListLocation from './components/ListLocation';
+import RegisterLocation from './components/RegisterLocation'; // Import the RegisterLocation component
+import { AuthContext } from './components/AuthContext';
 import './style.css';
 
 function App() {
-    const { isLoggedIn } = useContext(AuthContext); // Get the login status
+    const { isLoggedIn } = useContext(AuthContext);
 
     return (
         <Router>
@@ -28,7 +30,11 @@ function App() {
                     />
                     <Route 
                         path="/list-locations" 
-                        element={isLoggedIn ? <Navigate to="/" /> : <Navigate to="/" />} 
+                        element={isLoggedIn ? <ListLocation /> : <Navigate to="/" />} 
+                    />
+                    <Route 
+                        path="/register-location/:locationId" 
+                        element={isLoggedIn ? <RegisterLocation /> : <Navigate to="/" />} 
                     />
                 </Routes>
                 <Footer />
