@@ -23,10 +23,10 @@ app.use(express.json());
 
 // PostgreSQL connection
 const pool = new Pool({
-    user: "postgres",
+    user: process.env.USERNAME,
     host: 'localhost',
     database: "Smart-Parking-System",
-    password: "piyush7",
+    password: process.env.PASSWORD,
     port: 5432,
 });
 
@@ -150,8 +150,8 @@ app.get('/api/location/:locationId', async (req, res) => {
 app.post("/order",async(req,res)=>{
     try{
         const razorpay = new Razorpay({
-            key_id:"rzp_test_TBBRXgPa4yzuqK",
-            key_secret:"3zD9xctvxco5aKNfKaNoaf7D",
+            key_id:process.env.KEY_ID,
+            key_secret:process.env.KEY_SECRET,
         })
     
         const options  =req.body;
@@ -171,7 +171,7 @@ app.post("/order",async(req,res)=>{
 app.post('/order/validate',async(req,res)=>{
     const{razorpay_order_id,razorpay_payment_id,razorpay_signature}=req.body;
 
-    const sha =crypto.createHmac("sha256","3zD9xctvxco5aKNfKaNoaf7D");
+    const sha =crypto.createHmac("sha256",process.env.KEY_SECRET);
 
     sha.update(`${razorpay_order_id}|${razorpay_payment_id}`);
 
