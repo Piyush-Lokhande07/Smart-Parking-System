@@ -68,7 +68,7 @@ function Navbar() {
                     <div className="popup-content">
                         <span className="close" onClick={closePopup}>&times;</span>
                         {popupMessage ? (
-                            <div>{popupMessage}</div> // Show the message if it exists
+                            <div>{popupMessage}</div> 
                         ) : (
                             <>
                                 {popupType === "login" && <Login onSuccess={handleSuccessMessage} />}

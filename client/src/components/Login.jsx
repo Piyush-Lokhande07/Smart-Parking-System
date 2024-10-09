@@ -20,8 +20,10 @@ function Login({ onSuccess }) {
             const data = await response.json();
 
             if (response.ok) {
-                login(); // Update login state
+                login(data.userId); 
+                
                 onSuccess("Login Successful", true); // Pass success message and loggedIn state
+                console.log("UserId in Login",data.userId);
             } else {
                 setMessage(data.message || "Login failed");
             }

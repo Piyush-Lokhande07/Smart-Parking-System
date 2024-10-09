@@ -7,6 +7,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 const Razorpay = require('razorpay');
+const crypto = require('crypto');
+
 
 dotenv.config();
 
@@ -51,7 +53,7 @@ app.post('/api/auth/signUp', async (req, res) => {
 });
 
 // User Login Route (renamed to /login)
-app.post('/api/auth/login', async (req, res) => {
+app.post('/api/auth/login', async (req, res) => { 
     const { username, password } = req.body;
 
     try {
@@ -67,12 +69,13 @@ app.post('/api/auth/login', async (req, res) => {
             expiresIn: '1h',
         });
 
-        res.json({ message: 'Login successful', token });
+        res.json({ message: 'Login successful', token, userId: user.id }); // Include userId in the response
     } catch (error) {
         console.error("Error logging in user:", error);
         res.status(500).json({ message: 'Server error' });
     }
 });
+
 
 app.post('/api/add-parking-location', async (req, res) => {
     const {
@@ -136,7 +139,7 @@ app.get('/api/location/:locationId', async (req, res) => {
         if (result.rows.length === 0) {
             return res.status(404).json({ error: 'Location not found' });
         }
-        res.json(result.rows[0]); // Send the first row of the result
+        res.json(result.rows[0]); 
     } catch (error) {
         console.error('Error fetching location:', error);
         res.status(500).json({ error: 'Internal server error' });
@@ -168,7 +171,7 @@ app.post("/order",async(req,res)=>{
 app.post('/order/validate',async(req,res)=>{
     const{razorpay_order_id,razorpay_payment_id,razorpay_signature}=req.body;
 
-    const sha =crypto.createHmac("sha256",process.env.KEY_SECRET);
+    const sha =crypto.createHmac("sha256","3zD9xctvxco5aKNfKaNoaf7D");
 
     sha.update(`${razorpay_order_id}|${razorpay_payment_id}`);
 
@@ -184,6 +187,68 @@ app.post('/order/validate',async(req,res)=>{
         paymentId: razorpay_payment_id,
     });
 })
+
+// Add registration route
+
+app.post('/api/registerinfo', async (req, res) => { // Add /api prefix
+    const { userId, locationId, vehicleNumber, registeredTime } = req.body;
+
+    try {
+        if (!userId) {
+            return res.status(400).json({ message: 'User ID is required' });
+        }
+
+        await pool.query(
+            'UPDATE users SET has_registered = $1 WHERE id = $2',
+            [true, userId]
+        );
+        await pool.query(
+            'INSERT INTO registered_users (user_id, location_id, vehicle_number, registered_time) VALUES ($1, $2, $3, $4)',
+            [userId, locationId, vehicleNumber, registeredTime]
+        );
+        
+        res.status(201).json({ message: 'Registration successful and user status updated.' });
+    } catch (error) {
+        console.error('Error registering:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+
+
+
+
+app.get('/api/checkRegistration/:userId', async (req, res) => {
+    const { userId } = req.params;
+    try {
+        const result = await pool.query('SELECT has_registered FROM users WHERE id = $1', [userId]);
+        if (result.rows.length > 0) {
+            res.json({ has_registered: result.rows[0].has_registered });
+        } else {
+            res.status(404).json({ message: 'User not found' });
+        }
+    } catch (error) {
+        console.error('Error checking registration:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+// Fetch registration details
+app.get('/api/getRegistrationDetails/:userId', async (req, res) => {
+    const { userId } = req.params;
+    try {
+        const result = await pool.query('SELECT registered_time FROM registered_users WHERE user_id = $1', [userId]);
+        if (result.rows.length > 0) {
+            res.json({ registered_time: result.rows[0].registered_time });
+        } else {
+            res.status(404).json({ message: 'Registration details not found' });
+        }
+    } catch (error) {
+        console.error('Error fetching registration details:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
 
 
 // Start the server

@@ -9,6 +9,7 @@ import AddParkingLocation from './components/AddParkingLocation';
 import Footer from "./components/Footer";
 import ListLocation from './components/ListLocation';
 import RegisterLocation from './components/RegisterLocation'; // Import the RegisterLocation component
+import Opengate from './components/Opengate'; // Import the Opengate component
 import { AuthContext } from './components/AuthContext';
 import './style.css';
 
@@ -36,6 +37,11 @@ function App() {
                         path="/register-location/:locationId" 
                         element={isLoggedIn ? <RegisterLocation /> : <Navigate to="/" />} 
                     />
+                    <Route 
+                        path="/open-gate/:locationId" 
+                        element={isLoggedIn ? <Opengate /> : <Navigate to="/" />} 
+                    /> 
+
                 </Routes>
                 <Footer />
             </div>

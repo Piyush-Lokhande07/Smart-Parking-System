@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { AuthContext } from './AuthContext'; // Adjust the path as necessary
 
 const ListLocation = () => {
     const [locations, setLocations] = useState([]);
     const navigate = useNavigate(); // Get navigate function
+    const { userId } = useContext(AuthContext); // Get userId from AuthContext
+    console.log("Userid in ListLocation: ",userId);
 
     useEffect(() => {
         const fetchLocations = async () => {
@@ -20,7 +23,7 @@ const ListLocation = () => {
     }, []);
 
     const handleRegister = (locationId) => {
-        navigate(`/register-location/${locationId}`); // Navigate to RegisterLocation with locationId
+        navigate(`/register-location/${locationId}`, { state: { userId } }); // Navigate to RegisterLocation with locationId and userId
     };
 
     return (
