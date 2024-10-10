@@ -7,7 +7,7 @@ function AddParkingLocation() {
     const [googleMapUrl, setGoogleMapUrl] = useState('');
     const [accountHolderName, setAccountHolderName] = useState('');
     const [accountNumber, setAccountNumber] = useState('');
-    const [panNumber, setPanNumber] = useState(''); // Added PAN number state
+    const [panNumber, setPanNumber] = useState(''); 
     const [ifscCode, setIfscCode] = useState('');
     const [branchName, setBranchName] = useState('');
     const [availableSlots, setAvailableSlots] = useState('');
@@ -17,7 +17,7 @@ function AddParkingLocation() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Perform basic validation before sending request
+        
         if (!locationName || !completeAddress || !pinCode || !googleMapUrl || !accountHolderName || !accountNumber || !panNumber || !ifscCode || !branchName || !availableSlots) {
             setPopupMessage('Error: All fields are required.');
             setIsPopupOpen(true);
@@ -52,7 +52,6 @@ function AddParkingLocation() {
                 const result = await response.json();
                 setPopupMessage(result.message); 
                 setIsPopupOpen(true); 
-                // Clear form fields
                 setLocationName('');
                 setCompleteAddress('');
                 setPinCode('');

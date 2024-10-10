@@ -1,19 +1,19 @@
 import React, { useContext } from "react";
-import { AuthContext } from './AuthContext'; // Import AuthContext
-import ListLocation from './ListLocation'; // Import ListLocation component
+import { AuthContext } from './AuthContext'; 
+import ListLocation from './ListLocation'; 
 
 function Home() {
-    const { isLoggedIn } = useContext(AuthContext); // Get the login status
+    const { isLoggedIn } = useContext(AuthContext); 
 
-    // Render ListLocation if logged in, else render the home introduction
+    
     return (
         <div className="home-container">
             {isLoggedIn ? (
-                <ListLocation /> // Render ListLocation if logged in
+                <ListLocation /> 
             ) : (
                 <>
                     <div className="image">
-                        {/* Add an image if needed */}
+                        
                     </div>
                     <div className="text-box">
                         <p>

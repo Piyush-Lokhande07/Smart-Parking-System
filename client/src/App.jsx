@@ -8,8 +8,8 @@ import SignUp from './components/SignUp';
 import AddParkingLocation from './components/AddParkingLocation';
 import Footer from "./components/Footer";
 import ListLocation from './components/ListLocation';
-import RegisterLocation from './components/RegisterLocation'; // Import the RegisterLocation component
-import Opengate from './components/Opengate'; // Import the Opengate component
+import RegisterLocation from './components/RegisterLocation'; 
+import Opengate from './components/Opengate'; 
 import { AuthContext } from './components/AuthContext';
 import './style.css';
 

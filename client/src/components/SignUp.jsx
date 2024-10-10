@@ -44,7 +44,7 @@ function SignUp({ onSuccess }) {
             <div>Enter password:</div>
             <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
             <button className='in-btn' type="submit">Submit</button>
-            {message && <div>{message}</div>} {/* Display message */}
+            {message && <div>{message}</div>}
         </form>
     );
 }

@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
-import { AuthContext } from './AuthContext'; // Adjust the path as necessary
+import { useNavigate } from 'react-router-dom'; 
+import { AuthContext } from './AuthContext'; 
 
 const ListLocation = () => {
     const [locations, setLocations] = useState([]);
-    const navigate = useNavigate(); // Get navigate function
-    const { userId } = useContext(AuthContext); // Get userId from AuthContext
+    const navigate = useNavigate(); 
+    const { userId } = useContext(AuthContext); 
     console.log("Userid in ListLocation: ",userId);
 
     useEffect(() => {
@@ -23,7 +23,7 @@ const ListLocation = () => {
     }, []);
 
     const handleRegister = (locationId) => {
-        navigate(`/register-location/${locationId}`, { state: { userId } }); // Navigate to RegisterLocation with locationId and userId
+        navigate(`/register-location/${locationId}`, { state: { userId } }); 
     };
 
     return (

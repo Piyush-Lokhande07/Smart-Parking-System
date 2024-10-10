@@ -1,17 +1,17 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from './AuthContext'; // Adjust the path as necessary
+import { AuthContext } from './AuthContext'; 
 
 const Opengate = () => {
     const navigate = useNavigate();
-    const { userId } = useContext(AuthContext); // Get userId from AuthContext
+    const { userId } = useContext(AuthContext); 
     console.log("USerID  in Opengate: ",userId);
     const [deadline, setDeadline] = useState(null);
 
-    // Check if userId is available
+
     useEffect(() => {
         if (!userId) {
-            navigate('/'); // Redirect if userId is not available
+            navigate('/');
             return;
         }
 
@@ -20,7 +20,7 @@ const Opengate = () => {
                 const response = await fetch(`http://localhost:3000/api/checkRegistration/${userId}`);
                 const data = await response.json();
                 if (!data.has_registered) {
-                    navigate('/'); // Redirect to home if not registered
+                    navigate('/'); 
                 }
             } catch (error) {
                 console.error('Error checking registration status:', error);
@@ -31,9 +31,8 @@ const Opengate = () => {
         checkRegistration();
     }, [userId, navigate]);
 
-    // Fetch registration details (e.g., registration time) after confirming registration
     useEffect(() => {
-        if (!userId) return; // Avoid fetching if userId is not available
+        if (!userId) return; 
 
         const fetchRegistrationDetails = async () => {
             try {
@@ -41,7 +40,7 @@ const Opengate = () => {
                 const data = await response.json();
 
                 const registeredTime = new Date(data.registered_time);
-                registeredTime.setMinutes(registeredTime.getMinutes() + 30); // Add 30 minutes to registration time
+                registeredTime.setMinutes(registeredTime.getMinutes() + 30); 
 
                 setDeadline(registeredTime);
             } catch (error) {
@@ -52,7 +51,7 @@ const Opengate = () => {
         fetchRegistrationDetails();
     }, [userId]);
 
-    // Function to open the barrier for entry
+
     const handleOpenBarrier = async () => {
         try {
             const response = await fetch('http://localhost:3000/api/openBarrier', {
@@ -60,7 +59,7 @@ const Opengate = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ userId, action: 'entry' }), // Send userId and 'entry' action
+                body: JSON.stringify({ userId, action: 'entry' }),
             });
 
             if (response.ok) {

@@ -1,49 +1,49 @@
 import React, { useContext, useState } from "react"; 
-import { Link, useNavigate } from "react-router-dom"; // Import useNavigate for navigation
+import { Link, useNavigate } from "react-router-dom"; 
 import Login from './Login';
 import SignUp from './SignUp';
-import { AuthContext } from './AuthContext'; // Import AuthContext
+import { AuthContext } from './AuthContext';
 
 function Navbar() {
-    const { isLoggedIn, logout } = useContext(AuthContext); // Get login status and logout function
+    const { isLoggedIn, logout } = useContext(AuthContext); 
     const [popupType, setPopupType] = useState(""); 
     const [isPopupOpen, setIsPopupOpen] = useState(false); 
     const [popupMessage, setPopupMessage] = useState(""); 
-    const navigate = useNavigate(); // Initialize useNavigate
+    const navigate = useNavigate();
 
     const openPopup = (type) => {
         setPopupType(type);
         setIsPopupOpen(true);
-        setPopupMessage(""); // Reset message when opening popup
+        setPopupMessage(""); 
     };
 
     const closePopup = () => {
         setIsPopupOpen(false);
-        setPopupMessage(""); // Clear message on close
+        setPopupMessage(""); 
     };
 
     const handleSuccessMessage = (message, loggedIn = false) => {
         setPopupMessage(message);
         if (loggedIn) {
-            // Nothing needed here as we manage login in AuthContext
+          
         }
         setTimeout(() => {
-            closePopup(); // Close popup after 3 seconds
-        }, 3000); // Adjust time as needed
+            closePopup();
+        }, 3000);
     };
 
     const handleLogout = () => {
-        logout(); // Call logout from AuthContext
-        navigate("/"); // Redirect to home after logout
+        logout(); 
+        navigate("/"); 
     };
 
     const handleAddParkingLocation = () => {
         if (!isLoggedIn) {
-            setPopupMessage("You are not Logged in!"); // Show warning message
-            setIsPopupOpen(true); // Open popup
-            setTimeout(() => closePopup(), 3000); // Auto-close after 3 seconds
+            setPopupMessage("You are not Logged in!");
+            setIsPopupOpen(true); 
+            setTimeout(() => closePopup(), 3000); 
         } else {
-            navigate('/add-parking-location'); // Navigate to AddParkingLocation
+            navigate('/add-parking-location'); 
         }
     };
 

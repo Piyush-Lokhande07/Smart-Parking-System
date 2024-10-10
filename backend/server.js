@@ -16,12 +16,12 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
+
 app.use(cors());
-app.use(bodyParser.json()); // Parse JSON requests
+app.use(bodyParser.json()); 
 app.use(express.json());
 
-// PostgreSQL connection
+
 const pool = new Pool({
     user: process.env.USERNAME,
     host: 'localhost',
@@ -30,12 +30,12 @@ const pool = new Pool({
     port: 5432,
 });
 
-// Connect to PostgreSQL database
+
 pool.connect()
     .then(() => console.log("Connected to PostgreSQL Database"))
     .catch((error) => console.error("Database connection error:", error));
 
-// User Registration Route (renamed to /signUp)
+
 app.post('/api/auth/signUp', async (req, res) => {
     const { name, phone, email, username, password } = req.body;
 
@@ -52,7 +52,7 @@ app.post('/api/auth/signUp', async (req, res) => {
     }
 });
 
-// User Login Route (renamed to /login)
+
 app.post('/api/auth/login', async (req, res) => { 
     const { username, password } = req.body;
 
@@ -64,7 +64,7 @@ app.post('/api/auth/login', async (req, res) => {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
 
-        // Generate JWT
+       
         const token = jwt.sign({ id: user.id, username: user.username }, 'your_jwt_secret', {
             expiresIn: '1h',
         });

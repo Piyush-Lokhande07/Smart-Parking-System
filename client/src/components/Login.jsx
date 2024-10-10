@@ -1,8 +1,8 @@
 import React, { useState, useContext } from "react";
-import { AuthContext } from './AuthContext'; // Import the AuthContext
+import { AuthContext } from './AuthContext'; 
 
 function Login({ onSuccess }) {
-    const { login } = useContext(AuthContext); // Get the login function from context
+    const { login } = useContext(AuthContext); 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
@@ -22,7 +22,7 @@ function Login({ onSuccess }) {
             if (response.ok) {
                 login(data.userId); 
                 
-                onSuccess("Login Successful", true); // Pass success message and loggedIn state
+                onSuccess("Login Successful", true);
                 console.log("UserId in Login",data.userId);
             } else {
                 setMessage(data.message || "Login failed");
@@ -35,7 +35,7 @@ function Login({ onSuccess }) {
 
     return (
         <form onSubmit={handleSubmit}>
-            {message && <div>{message}</div>} {/* Display message */}
+            {message && <div>{message}</div>} 
             <div>Enter your username:</div>
             <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} required />
             <div>Enter password:</div>

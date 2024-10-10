@@ -63,7 +63,7 @@ const RegisterLocation = () => {
 
             var options = {
                 "key": "rzp_test_TBBRXgPa4yzuqK",
-                amount: amount * 100, // Set to total amount in paise
+                amount: amount * 100, 
                 currency,
                 "name": "Smart Parking System",
                 "description": "Test Transaction",
@@ -83,7 +83,7 @@ const RegisterLocation = () => {
                     });
 
                     if (validateRes.ok) {
-                        const registeredTime = new Date().toISOString(); // Get current timestamp for registered_time
+                        const registeredTime = new Date().toISOString(); 
 
                         console.log('User ID before registration:', userId);
 
