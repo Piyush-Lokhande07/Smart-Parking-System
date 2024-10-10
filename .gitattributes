@@ -7,3 +7,4 @@
 *.html eol=lf
 *.css eol=lf
 *.json eol=lf
+*.env

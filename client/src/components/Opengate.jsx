@@ -86,4 +86,4 @@ const Opengate = () => {
     );
 };
 
-export default Opengate;
+export default  Opengate;
