@@ -62,4 +62,4 @@ Integrating the backend with the Arduino enhances the Smart Parking System by pr
 - Develop an admin panel for managing parking slots, reservations, and monitoring system performance.
 
 ## License
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
