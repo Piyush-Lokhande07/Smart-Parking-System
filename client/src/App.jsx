@@ -22,6 +22,7 @@ function App() {
                 <Navbar />
                 <Routes>
                     <Route path="/" element={<Home />} />
+                    <Route path="/home" element={<Home />} /> {/* Added /home route */}
                     <Route path="/about-us" element={<AboutUs />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/sign-up" element={<SignUp />} />
@@ -37,11 +38,7 @@ function App() {
                         path="/register-location/:locationId" 
                         element={isLoggedIn ? <RegisterLocation /> : <Navigate to="/" />} 
                     />
-                    <Route 
-                        path="/open-gate/:locationId" 
-                        element={isLoggedIn ? <Opengate /> : <Navigate to="/" />} 
-                    /> 
-
+                    
                 </Routes>
                 <Footer />
             </div>

@@ -1,15 +1,25 @@
 import React, { useContext } from "react";
 import { AuthContext } from './AuthContext'; // Import AuthContext
 import ListLocation from './ListLocation'; // Import ListLocation component
+import Opengate from './Opengate'; // Import Opengate component
+import ExitGate from './ExitGate'; // Import ExitGate component
 
 function Home() {
-    const { isLoggedIn } = useContext(AuthContext); // Get the login status
+    const { isLoggedIn, hasRegistered, isInside } = useContext(AuthContext); // Get login status, registration status, and inside status
 
-    // Render ListLocation if logged in, else render the home introduction
+    // Render based on the user's state
     return (
         <div className="home-container">
             {isLoggedIn ? (
-                <ListLocation /> // Render ListLocation if logged in
+                hasRegistered ? (
+                    isInside ? (
+                        <ExitGate />  // Render ExitGate if isInside is true
+                    ) : (
+                        <Opengate />  // Render Opengate if logged in and hasRegistered is true
+                    )
+                ) : (
+                    <ListLocation />  // Render ListLocation if not registered
+                )
             ) : (
                 <>
                     <div className="image">

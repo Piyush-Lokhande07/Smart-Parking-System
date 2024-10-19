@@ -5,12 +5,10 @@ import { AuthContext } from './AuthContext';
 const RegisterLocation = () => {
     const { locationId } = useParams();
     const navigate = useNavigate();
-    const { userId } = useContext(AuthContext);
+    const { userId, setHasRegistered } = useContext(AuthContext); // Use setHasRegistered here
 
-    console.log('User ID in RegisterLocation:', userId);
     const [location, setLocation] = useState(null);
     const [vehicleNumber, setVehicleNumber] = useState('');
-    const [timeWindow, setTimeWindow] = useState('');
 
     useEffect(() => {
         const fetchLocationDetails = async () => {
@@ -36,8 +34,8 @@ const RegisterLocation = () => {
     const handlePayment = async (e) => {
         e.preventDefault();
 
-        if (vehicleNumber.trim() === '' || timeWindow.trim() === '') {
-            alert("Please fill in both the time window and vehicle number.");
+        if (vehicleNumber.trim() === '') {
+            alert("Please enter your vehicle number.");
             return;
         }
 
@@ -59,15 +57,13 @@ const RegisterLocation = () => {
             }
 
             const order = await response.json();
-            console.log(order);
 
             var options = {
-                "key": "rzp_test_TBBRXgPa4yzuqK",
-                amount: amount * 100, // Set to total amount in paise
+                "key": process.env.KEY_ID,
+                amount: amount * 100,
                 currency,
                 "name": "Smart Parking System",
                 "description": "Test Transaction",
-                "image": "https://example.com/your_logo",
                 "order_id": order.id,
                 "handler": async function (response) {
                     const body = {
@@ -83,9 +79,7 @@ const RegisterLocation = () => {
                     });
 
                     if (validateRes.ok) {
-                        const registeredTime = new Date().toISOString(); // Get current timestamp for registered_time
-
-                        console.log('User ID before registration:', userId);
+                        const registeredTime = new Date().toISOString();
 
                         await fetch(`http://localhost:3000/api/registerinfo`, {
                             method: "POST",
@@ -93,15 +87,24 @@ const RegisterLocation = () => {
                                 userId: userId,
                                 locationId: locationId,
                                 vehicleNumber: vehicleNumber,
-                                registeredTime: registeredTime, 
+                                registeredTime: registeredTime,
                             }),
                             headers: {
                                 "Content-Type": "application/json",
                             },
                         });
 
+                        // Update dynamic slot number in the database
+                        await fetch(`http://localhost:3000/api/update-slot/${locationId}`, {
+                            method: "PATCH",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                        });
+
+                        setHasRegistered(true); // Set hasRegistered to true
                         alert('Payment successful and registration complete!');
-                        navigate(`/open-gate/${locationId}`, { state: { userId } });
+                        navigate('/home'); 
                     }
                 },
                 "prefill": {
@@ -134,53 +137,18 @@ const RegisterLocation = () => {
         }
     };
 
-    const getCurrentTime = () => {
-        const now = new Date();
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        return `${hours}:${minutes}`;
-    };
-
-    const getMaxTime = () => {
-        const now = new Date();
-        now.setHours(now.getHours() + 3);
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        return `${hours}:${minutes}`;
-    };
-
     return (
         <div className='reg-location-con'>
             <div className='register-location'>
                 <div className='slot-info'>
                     <div style={{ textAlign: 'center' }}>Available Slots</div>
-                    <div className='slot-num'>{location.available_slots}</div>
+                    <div className='slot-num'>{location.dynamic_slot_number}</div>
                 </div>
                 <h2>Register for Parking at {location.location_name}</h2>
                 <p>Complete Address: {location.complete_address}</p>
                 <p>Google Map URL: <a href={location.google_map_url} target="_blank" rel="noopener noreferrer">View on Map</a></p>
                 
                 <form>
-                    <label htmlFor="timeWindow">Time Window (3 hours advance):</label>
-                    <input
-                        type="time"
-                        id="timeWindow"
-                        name="timeWindow"
-                        value={timeWindow}
-                        onChange={(e) => {
-                            const selectedTime = e.target.value;
-                            const maxTime = getMaxTime();
-                            if (selectedTime <= maxTime) {
-                                setTimeWindow(selectedTime);
-                            } else {
-                                alert('You can only select a time within 3 hours from now.');
-                            }
-                        }}
-                        required
-                        min={getCurrentTime()}
-                        max={getMaxTime()}
-                    />
-
                     <label htmlFor="vehicleNumber">Vehicle Number:</label>
                     <input
                         type="text"

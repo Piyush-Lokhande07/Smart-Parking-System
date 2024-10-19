@@ -22,7 +22,7 @@ function Login({ onSuccess }) {
             if (response.ok) {
                 login(data.userId); 
                 
-                onSuccess("Login Successful", true); // Pass success message and loggedIn state
+                onSuccess("Login Successful", true); 
                 console.log("UserId in Login",data.userId);
             } else {
                 setMessage(data.message || "Login failed");
@@ -35,7 +35,7 @@ function Login({ onSuccess }) {
 
     return (
         <form onSubmit={handleSubmit}>
-            {message && <div>{message}</div>} {/* Display message */}
+            {message && <div>{message}</div>} 
             <div>Enter your username:</div>
             <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} required />
             <div>Enter password:</div>

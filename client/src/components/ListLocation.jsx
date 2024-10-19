@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
-import { AuthContext } from './AuthContext'; // Adjust the path as necessary
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from './AuthContext';
 
 const ListLocation = () => {
     const [locations, setLocations] = useState([]);
-    const navigate = useNavigate(); // Get navigate function
-    const { userId } = useContext(AuthContext); // Get userId from AuthContext
-    console.log("Userid in ListLocation: ",userId);
+    const navigate = useNavigate();
+    const { userId } = useContext(AuthContext);
+    console.log("Userid in ListLocation: ", userId);
 
     useEffect(() => {
         const fetchLocations = async () => {
@@ -23,7 +23,7 @@ const ListLocation = () => {
     }, []);
 
     const handleRegister = (locationId) => {
-        navigate(`/register-location/${locationId}`, { state: { userId } }); // Navigate to RegisterLocation with locationId and userId
+        navigate(`/register-location/${locationId}`, { state: { userId } });
     };
 
     return (
@@ -36,7 +36,7 @@ const ListLocation = () => {
                     <div className='card-container' key={location.id}>
                         <div className="card">
                             <h3 className='loc-name'>
-                                {location.location_name} - {location.available_slots} slots available
+                                {location.location_name} - {location.dynamic_slot_number} slots available out of {location.available_slots}
                             </h3>
                             <div className='down-op'>
                                 <a href={location.google_map_url} target="_blank" rel="noopener noreferrer">View on Map</a>

@@ -1,88 +1,74 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from './AuthContext'; // Adjust the path as necessary
+import { AuthContext } from './AuthContext';
 
 const Opengate = () => {
+    const [timeLeft, setTimeLeft] = useState(10800); // 3 hours in seconds
     const navigate = useNavigate();
-    const { userId } = useContext(AuthContext); // Get userId from AuthContext
-    console.log("USerID  in Opengate: ",userId);
-    const [deadline, setDeadline] = useState(null);
+    const { userId, setIsInside } = useContext(AuthContext); // Access userId and setIsInside from AuthContext
 
-    // Check if userId is available
     useEffect(() => {
-        if (!userId) {
-            navigate('/'); // Redirect if userId is not available
-            return;
-        }
-
-        const checkRegistration = async () => {
-            try {
-                const response = await fetch(`http://localhost:3000/api/checkRegistration/${userId}`);
-                const data = await response.json();
-                if (!data.has_registered) {
-                    navigate('/'); // Redirect to home if not registered
+        const timer = setInterval(() => {
+            setTimeLeft(prevTime => {
+                if (prevTime <= 1) {
+                    clearInterval(timer);
+                    return 0;
                 }
-            } catch (error) {
-                console.error('Error checking registration status:', error);
-                navigate('/');
-            }
-        };
+                return prevTime - 1;
+            });
+        }, 1000);
 
-        checkRegistration();
-    }, [userId, navigate]);
+        return () => clearInterval(timer);
+    }, []);
 
-    // Fetch registration details (e.g., registration time) after confirming registration
-    useEffect(() => {
-        if (!userId) return; // Avoid fetching if userId is not available
-
-        const fetchRegistrationDetails = async () => {
-            try {
-                const response = await fetch(`http://localhost:3000/api/getRegistrationDetails/${userId}`);
-                const data = await response.json();
-
-                const registeredTime = new Date(data.registered_time);
-                registeredTime.setMinutes(registeredTime.getMinutes() + 30); // Add 30 minutes to registration time
-
-                setDeadline(registeredTime);
-            } catch (error) {
-                console.error('Error fetching registration details:', error);
-            }
-        };
-
-        fetchRegistrationDetails();
-    }, [userId]);
-
-    // Function to open the barrier for entry
-    const handleOpenBarrier = async () => {
+    const handleOpenGate = async () => {
         try {
-            const response = await fetch('http://localhost:3000/api/openBarrier', {
+            const response = await fetch(`http://localhost:3000/api/checkPresence`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ userId, action: 'entry' }), // Send userId and 'entry' action
+                body: JSON.stringify({ userId }),
             });
 
             if (response.ok) {
-                alert('Barrier opened! Entry recorded.');
+                const data = await response.json();
+                if (data.isPresent) {
+                    // Vehicle is detected, proceed to open gate
+                    setIsInside(true); // Set isInside to true
+                    const entryTimeResponse = await fetch(`http://localhost:3000/api/openGateEntry`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ userId }),
+                    });
+
+                    if (entryTimeResponse.ok) {
+                        alert('Gate opened successfully!');
+                        navigate('/home');
+                    } else {
+                        alert('Failed to log entry time.');
+                    }
+                } else {
+                    alert('Vehicle not detected at the barrier.');
+                }
             } else {
-                alert('Failed to open the barrier.');
+                alert('Error checking vehicle presence.');
             }
         } catch (error) {
-            console.error('Error opening barrier:', error);
-            alert('Error opening barrier.');
+            console.error('Error:', error);
+            alert('An unexpected error occurred.');
         }
     };
 
-    if (!deadline) {
-        return <p>Loading...</p>; 
-    }
-
     return (
-        <div className='open-div'>
-            <h1>Welcome to the Parking Area</h1>
-            <p>Your registration will be cancelled after {deadline.toLocaleTimeString()}.</p>
-            <button onClick={handleOpenBarrier}>Open Barrier for Entry</button>
+        <div className='open-gate-container'>
+            <div className='open-gate-box'>
+                <h2>Open Gate for Entry</h2>
+                <p>Your registration will be cancelled after: {Math.floor(timeLeft / 3600)}:{('0' + Math.floor((timeLeft % 3600) / 60)).slice(-2)}:{('0' + (timeLeft % 60)).slice(-2)}</p>
+                <button className='entry-btn' onClick={handleOpenGate} disabled={timeLeft <= 0}>Open Gate</button>
+            </div>
         </div>
     );
 };

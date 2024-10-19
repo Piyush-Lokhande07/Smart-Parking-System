@@ -10,6 +10,7 @@ const Razorpay = require('razorpay');
 const crypto = require('crypto');
 
 
+
 dotenv.config();
 
 
@@ -18,15 +19,15 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors());
-app.use(bodyParser.json()); // Parse JSON requests
+app.use(bodyParser.json()); 
 app.use(express.json());
 
 // PostgreSQL connection
 const pool = new Pool({
-    user: "postgres",
+    user: proccess.env.USERNAME,
     host: 'localhost',
     database: "Smart-Parking-System",
-    password: "piyush7",
+    password: process.env.PASSWORD,
     port: 5432,
 });
 
@@ -150,8 +151,8 @@ app.get('/api/location/:locationId', async (req, res) => {
 app.post("/order",async(req,res)=>{
     try{
         const razorpay = new Razorpay({
-            key_id:"rzp_test_TBBRXgPa4yzuqK",
-            key_secret:"3zD9xctvxco5aKNfKaNoaf7D",
+            key_id:process.env.KEY_ID,
+            key_secret:process.env.KEY_SECRET,
         })
     
         const options  =req.body;
@@ -171,7 +172,7 @@ app.post("/order",async(req,res)=>{
 app.post('/order/validate',async(req,res)=>{
     const{razorpay_order_id,razorpay_payment_id,razorpay_signature}=req.body;
 
-    const sha =crypto.createHmac("sha256","3zD9xctvxco5aKNfKaNoaf7D");
+    const sha =crypto.createHmac("sha256",process.env.KEY_SECRET);
 
     sha.update(`${razorpay_order_id}|${razorpay_payment_id}`);
 
@@ -188,29 +189,20 @@ app.post('/order/validate',async(req,res)=>{
     });
 })
 
-// Add registration route
 
-app.post('/api/registerinfo', async (req, res) => { // Add /api prefix
+
+app.post('/api/registerinfo', async (req, res) => {
     const { userId, locationId, vehicleNumber, registeredTime } = req.body;
-
     try {
-        if (!userId) {
-            return res.status(400).json({ message: 'User ID is required' });
-        }
-
-        await pool.query(
-            'UPDATE users SET has_registered = $1 WHERE id = $2',
-            [true, userId]
-        );
-        await pool.query(
-            'INSERT INTO registered_users (user_id, location_id, vehicle_number, registered_time) VALUES ($1, $2, $3, $4)',
-            [userId, locationId, vehicleNumber, registeredTime]
-        );
-        
-        res.status(201).json({ message: 'Registration successful and user status updated.' });
+        const query = `
+            INSERT INTO registered_users (userId, vehicle_number, registered_time, location_id)
+            VALUES ($1, $2, $3, $4)
+        `;
+        await pool.query(query, [userId, vehicleNumber, registeredTime, locationId]);
+        res.status(201).json({ message: 'Registration successful.' });
     } catch (error) {
-        console.error('Error registering:', error);
-        res.status(500).json({ message: 'Internal server error' });
+        console.error('Error registering user:', error);
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
 
@@ -218,34 +210,194 @@ app.post('/api/registerinfo', async (req, res) => { // Add /api prefix
 
 
 
-app.get('/api/checkRegistration/:userId', async (req, res) => {
-    const { userId } = req.params;
+app.patch('/api/update-slot/:locationId', async (req, res) => {
+    const locationId = req.params.locationId;
     try {
-        const result = await pool.query('SELECT has_registered FROM users WHERE id = $1', [userId]);
-        if (result.rows.length > 0) {
-            res.json({ has_registered: result.rows[0].has_registered });
-        } else {
-            res.status(404).json({ message: 'User not found' });
+        const query = `
+            UPDATE parking_locations
+            SET dynamic_slot_number = dynamic_slot_number - 1
+            WHERE id = $1 AND dynamic_slot_number > 0
+        `;
+        const result = await pool.query(query, [locationId]);
+
+        if (result.rowCount === 0) {
+            return res.status(400).json({ error: 'No slots available or invalid location ID.' });
         }
+
+        res.status(200).json({ message: 'Slot updated successfully.' });
     } catch (error) {
-        console.error('Error checking registration:', error);
-        res.status(500).json({ message: 'Internal server error' });
+        console.error('Error updating slot:', error);
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
 
-// Fetch registration details
-app.get('/api/getRegistrationDetails/:userId', async (req, res) => {
-    const { userId } = req.params;
+// Check presence of the vehicle
+app.post('/api/checkPresence', async (req, res) => {
+    const { userId } = req.body;
+
     try {
-        const result = await pool.query('SELECT registered_time FROM registered_users WHERE user_id = $1', [userId]);
-        if (result.rows.length > 0) {
-            res.json({ registered_time: result.rows[0].registered_time });
+        const nodeMcuResponse = await fetch('http://192.168.1.11/checkPresence', {
+            method: 'GET',
+            timeout: 5000  // Add a timeout of 5 seconds
+        });
+
+        const data = await nodeMcuResponse.json();
+        console.log("data:", data);
+
+        if (data.isPresent) {
+            res.json({ isPresent: true });
         } else {
-            res.status(404).json({ message: 'Registration details not found' });
+            res.json({ isPresent: false });
         }
     } catch (error) {
-        console.error('Error fetching registration details:', error);
-        res.status(500).json({ message: 'Internal server error' });
+        console.error('Error checking presence:', error);
+        res.status(500).json({ error: 'Error checking presence' });
+    }
+});
+
+// Open gate and log the entry
+app.post('/api/openGateEntry', async (req, res) => {
+    const { userId } = req.body;
+    try {
+        const client = await pool.connect();
+
+        const openGateTiming = new Date().toISOString();
+        // Update registered_users table with the opengate_timing
+        const updateQuery = `
+            UPDATE registered_users 
+            SET opengate_timing = $1 
+            WHERE userId = $2 AND opengate_timing IS NULL;
+        `;
+        const result = await client.query(updateQuery, [openGateTiming, userId]);
+
+        if (result.rowCount > 0) {
+            // Send signal to NodeMCU to open the gate
+            const nodeMcuResponse = await fetch('http://192.168.1.11/openGate', {
+                method: 'GET',
+                timeout: 5000  // Add a timeout of 5 seconds
+            });
+
+            const nodeMcuData = await nodeMcuResponse.json();
+
+            if (nodeMcuData.success) {
+                res.json({ success: true });
+            } else {
+                res.status(500).json({ error: 'Failed to open the gate' });
+            }
+        } else {
+            res.status(400).json({ error: 'Failed to log entry time or gate already opened' });
+        }
+
+        client.release();
+    } catch (error) {
+        console.error('Error opening gate:', error);
+        res.status(500).json({ error: 'Error opening gate' });
+    }
+});
+
+app.post('/api/closeGate', async (req, res) => {
+    const { userId } = req.body;
+
+    try {
+        const client = await pool.connect();
+
+        const closeGateTiming = new Date(); // Current server time (to be stored)
+
+        // Update closegate_timing in the registered_users table
+        const updateQuery = `
+            UPDATE registered_users 
+            SET closegate_timing = $1 
+            WHERE userId = $2 AND closegate_timing IS NULL;
+        `;
+        await client.query(updateQuery, [closeGateTiming, userId]);
+
+        // Retrieve opengate_timing and closegate_timing for the user from the registered_users table
+        const selectQuery = `
+            SELECT opengate_timing, closegate_timing FROM registered_users 
+            WHERE userId = $1 AND closegate_timing IS NOT NULL;
+        `;
+        const selectResult = await client.query(selectQuery, [userId]);
+
+        if (selectResult.rows.length === 0) {
+            res.status(400).json({ error: 'No registered entry found for this user.' });
+            client.release();
+            return;
+        }
+
+        const { opengate_timing, closegate_timing } = selectResult.rows[0];
+        const openTime = new Date(opengate_timing); // Time directly from DB
+        const closeTime = new Date(closegate_timing); // Also from DB
+
+        // Calculate the time difference in minutes
+        const diffInMinutes = (closeTime - openTime) / (1000 * 60);  // Difference in minutes
+
+        // Cost calculation: Rs.50 per hour or Rs.0.83 per minute
+        const costPerMinute = 50 / 60;
+        const totalAmount = Math.ceil(diffInMinutes * costPerMinute);  // Round up to nearest rupee
+
+        console.log("Time difference in minutes:", diffInMinutes, "Total Amount:", totalAmount);
+
+        client.release();
+
+        // Respond with the calculated total amount
+        res.json({ success: true, totalAmount });
+
+    } catch (error) {
+        console.error('Error closing gate:', error);
+        res.status(500).json({ error: 'Failed to record exit time' });
+    }
+});
+
+
+
+app.post('/api/openExitGate', async (req, res) => {
+    const { userId } = req.body;
+
+    try {
+        const client = await pool.connect();
+
+        // Retrieve the location_id from registered_users
+        const selectQuery = `
+            SELECT location_id FROM registered_users 
+            WHERE userId = $1 AND closegate_timing IS NOT NULL;
+        `;
+        const selectResult = await client.query(selectQuery, [userId]);
+
+        if (selectResult.rows.length === 0) {
+            res.status(400).json({ error: 'No closed gate entry found for this user.' });
+            client.release();
+            return;
+        }
+
+        const { location_id } = selectResult.rows[0]; 
+
+        // Increase available_slots by 1 in the parking_locations table
+        const updateSlotsQuery = `
+            UPDATE parking_locations
+            SET dynamic_slot_number = dynamic_slot_number + 1
+            WHERE id = $1;
+        `;
+        await client.query(updateSlotsQuery, [location_id]);
+
+        // Send signal to NodeMCU to open the gate
+        const nodeMcuResponse = await fetch('http://192.168.1.11/openGate', {
+            method: 'GET',
+            timeout: 5000  // Add a timeout of 5 seconds
+        });
+
+        const nodeMcuData = await nodeMcuResponse.json();
+
+        if (nodeMcuData.success) {
+            res.json({ success: true });
+        } else {
+            res.status(500).json({ error: 'Failed to open the gate' });
+        }
+
+        client.release();
+
+    } catch (error) {
+        console.error('Error opening exit gate:', error);
+        res.status(500).json({ error: 'Failed to open exit gate' });
     }
 });
 
