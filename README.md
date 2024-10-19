@@ -1,7 +1,7 @@
 # Smart Parking System
 
 ## Overview
-The Smart Parking System is an innovative solution designed to streamline the parking experience for users. This system features a website that informs users of available parking slots, allows for reservations, and integrates an Arduino model for practical demonstrations. Users can book a parking slot, pay the required fees, and gain access to the parking lot through an automated barricade system that uses infrared (IR) sensors for car detection.
+The Smart Parking System streamlines parking by providing a website for real-time slot availability, reservations, and fee payment. It integrates an Arduino model for demonstrations, with an automated barricade system using IR sensors for vehicle detection. The hardware setup, including Arduino and components, ensures seamless communication between the system, website, and backend for real-time vehicle detection and barricade control.
 
 ## Features
 - **Real-time Slot Availability**: Users can view available parking slots on the website.
@@ -16,7 +16,7 @@ For the Arduino model and system integration, the following components are neces
 - **Arduino UNO Board**: The microcontroller that will handle the logic for the barricade operation.
 - **IR Sensor Module**: To detect the presence of a car at the entry point.
 - **Servo Motor**: To control the movement of the barricade.
-- **WiFi Module (ESP8266)**: To connect the Arduino to the internet, allowing communication with the backend.
+- **NodeMCU**: To connect the Arduino to the internet, allowing communication with the backend via Wi-Fi.
 - **Power Supply**: To power the Arduino and connected components.
 - **Breadboard and Jumper Wires**: For prototyping and connections.
 
@@ -51,8 +51,8 @@ The backend of the Smart Parking System is responsible for managing user interac
 ### Technologies Used
 - **Node.js / Flask / Django**: Choose a backend framework suitable for handling HTTP requests and managing application logic.
 - **Express.js (if using Node.js)**: For setting up the server and routing.
-- **Database**: MySQL, MongoDB, or another suitable database to store user data, reservations, and payment information.
-- **Axios or Fetch API**: For making HTTP requests from the frontend to the backend.
+- **Database**: Postgre SQL to store user data, reservations, and payment information.
+- **Fetch API**: For making HTTP requests from the frontend to the backend.
 
 ## Conclusion
 Integrating the backend with the Arduino enhances the Smart Parking System by providing a robust mechanism for user management, reservation handling, and real-time communication with the hardware. This integration ensures a seamless experience for users, allowing them to easily interact with the system through the website.
