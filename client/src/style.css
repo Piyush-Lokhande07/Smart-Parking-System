@@ -1,90 +1,99 @@
-*{
-  margin:0;
+/* Global reset for margin, padding, and box-sizing */
+* {
+  margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
-nav{
+
+/* Navigation styling */
+nav {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  background-color: rgb(7, 7, 149);
+  background: linear-gradient(90deg, rgb(7, 7, 149), rgb(0, 213, 255));
   height: 40px;
+  transition: background 0.3s ease;
 }
 
-.nav-lk{
+.nav-lk {
   text-decoration: none;
   height: 100%;
 }
-.open-div{
+
+.open-div {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 60vh;
-
 }
-.open-div button{
+
+.open-div button {
   margin: 0 10px;
   padding: 10px 20px;
   cursor: pointer;
-  background-color: #007bff;
+  background: linear-gradient(90deg, #007bff, #0056b3);
   color: white;
   border: none;
   border-radius: 4px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-.open-div button:hover{
+.open-div button:hover {
   background-color: #0056b3;
+  transform: scale(1.05);
 }
-.nav-btn{
+
+.nav-btn {
   color: white;
-  background-color:rgb(7, 7, 149) ;
-  border:none;
+  background-color: rgb(7, 7, 149);
+  border: none;
 }
-footer{
+
+footer {
   display: flex;
   justify-content: center;
   background-color: gray;
   height: 30px;
   align-items: center;
   margin-top: 10px;
-  
 }
-.image{
+
+.image {
   height: 400px;
   width: 100vw;
   background-color: rgb(0, 213, 255);
 }
-.home-container{
+
+.home-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
-.text-box{
+
+.text-box {
   width: 390px;
 }
 
-/* nav {
-  background-color: #f1f1f1;
-  padding: 10px;
-} */
-
-
+/* Input button styles with hover and transitions */
 .in-btn {
   margin: 0 10px;
   padding: 10px 20px;
   cursor: pointer;
-  background-color: #007bff;
+  background: linear-gradient(90deg, #007bff, #0056b3);
   color: white;
   border: none;
   border-radius: 4px;
+  transition: background 0.3s ease, transform 0.3s ease;
 }
 
-.int-btn:hover {
-  background-color: #0056b3;
+.in-btn:hover {
+  background: #0056b3;
+  transform: scale(1.05);
 }
 
+/* Popup box styles */
 .popup {
   display: flex;
   justify-content: center;
@@ -96,7 +105,6 @@ footer{
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 1000;
-  
 }
 
 .popup-content {
@@ -115,54 +123,57 @@ footer{
   cursor: pointer;
   font-size: 24px;
   color: #aaa;
+  transition: color 0.3s ease;
 }
 
 .close:hover {
   color: #000;
 }
 
-/* form div {
-  margin-bottom: 10px;
-  font-size: 14px;
-} */
-.card-container{
+.card-container {
   width: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;
-
 }
-.down-op{
+
+.down-op {
   display: flex;
-  justify-content:center;
+  justify-content: center;
   gap: 20px;
   margin-top: 15px;
-  
 }
-.register-btn{
-  background-color: #007bff;
+
+/* Button styles for registration with hover effects */
+.register-btn {
+  background: linear-gradient(90deg, #007bff, #0056b3);
   color: white;
   border: none;
   border-radius: 4px;
   width: 100px;
   height: 25px;
   border: 0.5px solid black;
+  transition: background 0.3s ease, transform 0.3s ease;
 }
-.big-container{
+
+.register-btn:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+.big-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
-.big-container h2{
+
+.big-container h2 {
   font-size: 3rem;
   margin-bottom: 20px;
 }
-.register-btn:hover{
-  background-color: #0056b3;
-}
 
-.card{
+.card {
   width: 40vw;
   display: flex;
   flex-direction: column;
@@ -172,11 +183,19 @@ footer{
   height: 90px;
   margin: 10px;
   border-radius: 4px;
-  background-color: beige;
+  background: linear-gradient(90deg, beige, #f7e7ce);
+  transition: transform 0.3s ease, background-color 0.3s ease;
 }
-.card h3{
+
+.card:hover {
+  transform: scale(1.05);
+  background-color: #f0e5c9;
+}
+
+.card h3 {
   font-size: 1.7rem;
 }
+
 input {
   width: 100%;
   padding: 8px;
@@ -184,105 +203,108 @@ input {
   border: 1px solid #ccc;
   border-radius: 4px;
 }
-.about-us{
+
+.about-us {
   width: 50vw;
   display: flex;
   flex-direction: column;
   align-self: center;
-  justify-self:center;
+  justify-self: center;
   gap: 10px;
 }
-.about-container{
+
+.about-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  
 }
-.Payment-btn{
+
+.Payment-btn {
   width: 50%;
 }
 
-
-.slot-num{
+.slot-num {
   font-size: 5rem;
   text-align: center;
 }
-.slot-info{
+
+.slot-info {
   display: flex;
   flex-direction: column-reverse;
-  
 }
-.register-location{
+
+.register-location {
   display: flex;
   flex-direction: column;
   gap: 30px;
 }
-.reg-location-con{
+
+.reg-location-con {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
-.reg-b{
+
+.reg-b {
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
+
+/* Submit button styles with hover */
 button[type="submit"] {
-  background-color: rgb(43, 43, 217);
+  background: linear-gradient(90deg, rgb(43, 43, 217), rgb(14, 14, 192));
   color: white;
   padding: 10px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   width: 100%;
+  transition: background 0.3s ease, transform 0.3s ease;
 }
 
 button[type="submit"]:hover {
   background-color: rgb(14, 14, 192);
-}
-.entry-btn{
-  background-color: rgb(43, 43, 217);
-  color: white;
-  padding: 10px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  width: 100%;
-}
-.entry-btn:hover{
-  background-color: rgb(14, 14, 192);
-}
-.exit-btn{
-  background-color: rgb(43, 43, 217);
-  color: white;
-  padding: 10px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  width: 100%;
-}
-.exit-btn:hover{
-  background-color: rgb(14, 14, 192);
+  transform: scale(1.05);
 }
 
-.open-gate-box{
+/* Gate control buttons with hover effects */
+.entry-btn, .exit-btn {
+  background: linear-gradient(90deg, rgb(43, 43, 217), rgb(14, 14, 192));
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.entry-btn:hover, .exit-btn:hover {
+  background-color: rgb(14, 14, 192);
+  transform: scale(1.05);
+}
+
+.open-gate-box {
   height: 40vh;
 }
-.open-gate-container{
+
+.open-gate-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
-.add-loc-form{
+
+.add-loc-form {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 100vw;
-  
 }
-.auto-loc-form form{
+
+.auto-loc-form form {
   margin-left: 500px;
 }
