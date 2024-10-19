@@ -16,14 +16,14 @@ For the Arduino model and system integration, the following components are neces
 - **Arduino UNO Board**: The microcontroller that will handle the logic for the barricade operation.
 - **IR Sensor Module**: To detect the presence of a car at the entry point.
 - **Servo Motor**: To control the movement of the barricade.
-- **WiFi Module (ESP8266)**: To connect the Arduino to the internet, allowing communication with the backend.
+- **NodeMCU**: To connect the Arduino to the internet, allowing communication with the backend via WiFi.
 - **Power Supply**: To power the Arduino and connected components.
 - **Breadboard and Jumper Wires**: For prototyping and connections.
 
 ### Software Components
 - **Arduino IDE**: For writing and uploading the code to the Arduino.
 - **Backend Framework**: Node.js, Flask, or any suitable framework to handle HTTP requests and database management.
-- **Database**: A database (e.g., MySQL, MongoDB) to manage user reservations and payments.
+- **Database**: A database (Postgre SQL) to manage user reservations and payments.
 
 ## System Architecture
 The system architecture consists of two main components: the front end (website) and the back end (server + database). The interaction between these components is facilitated by the Arduino microcontroller.
