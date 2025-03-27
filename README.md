@@ -1,7 +1,7 @@
 # Smart Parking System
 
 ## Overview
-The Smart Parking System is an innovative solution designed to streamline the parking experience for users. This system features a website that informs users of available parking slots, allows for reservations, and integrates an Arduino model for practical demonstrations. Users can book a parking slot, pay the required fees, and gain access to the parking lot through an automated barricade system that uses infrared (IR) sensors for car detection.
+The Smart Parking System is an innovative solution designed to streamline the parking experience for users. This system features a website that informs users of available parking slots, allows for reservations and integrates an Arduino model for practical demonstrations. Users can book a parking slot, pay the required fees, and gain access to the parking lot through an automated barricade system that uses infrared (IR) sensors for car detection reducing the overall human intervention.This website is later going to be a business model to help out people with traffic problems and be a smart city project.
 
 ## Features
 - **Real-time Slot Availability**: Users can view available parking slots on the website.
