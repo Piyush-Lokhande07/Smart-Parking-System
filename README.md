@@ -1,58 +1,85 @@
-# Smart Parking System
+# 🚗 Smart Parking System – IoT-Based Project
 
-## Overview
-The Smart Parking System is an innovative solution designed to streamline the parking experience for users. This system features a website that informs users of available parking slots, allows for reservations and integrates an Arduino model for practical demonstrations. Users can book a parking slot, pay the required fees, and gain access to the parking lot through an automated barricade system that uses infrared (IR) sensors for car detection reducing the overall human intervention.This website is later going to be a business model to help out people with traffic problems and be a smart city project.
+## 🧠 Overview
 
-## Features
-- **Real-time Slot Availability**: Users can view available parking slots on the website.
-- **Reservation System**: Users can book a slot for a maximum of 3 hours after a fee payment of 50 Rs.
-- **Automated Barricade Control**: The entry and exit barricade will operate based on user input and IR sensor data.
-- **Flexible Payment Options**: Users incur a fee of 20 Rs per hour after the first free hour upon exit.
+The **Smart Parking System** is an IoT-powered web application designed to reduce urban traffic congestion by streamlining the parking process. It allows users to **register**, **find nearby parking slots**, **reserve in real time**, and **make secure payments** — all via a seamless web interface. The system also includes a working **Arduino-based prototype** that automates entry/exit using **IR sensors** and **servo motors**.
 
-## Components Required
-For the Arduino model and system integration, the following components are necessary:
+This project is envisioned as part of a **smart city initiative** to provide efficient, technology-driven parking solutions.
 
-### Hardware Components
-- **Arduino UNO Board**: The microcontroller that will handle the logic for the barricade operation.
-- **IR Sensor Module**: To detect the presence of a car at the entry point.
-- **Servo Motor**: To control the movement of the barricade.
-- **NodeMCU**: To connect the Arduino to the internet, allowing communication with the backend via WiFi.
-- **Power Supply**: To power the Arduino and connected components.
-- **Breadboard and Jumper Wires**: For prototyping and connections.
+---
 
-### Software Components
-- **Arduino IDE**: For writing and uploading the code to the Arduino.
-- **Backend Framework**: Node.js, Flask, or any suitable framework to handle HTTP requests and database management.
-- **Database**: A database (Postgre SQL) to manage user reservations and payments.
+## ✨ Key Features
 
-## System Architecture
-The system architecture consists of two main components: the front end (website) and the back end (server + database). The interaction between these components is facilitated by the Arduino microcontroller.
+- 🔐 **User Authentication**
+  - Secure user registration and login using **JWT** and **Bcrypt** for encrypted sessions and passwords.
 
-### Workflow
-1. **User Reservation**:
-   - Users log in to the website and book a parking slot.
-   - Upon booking, the slot is reserved for 3 hours.
-   - The user receives a confirmation and is instructed to arrive within the allotted time.
+- 📍 **Location-Based Parking Slot Booking**
+  - Users can view and reserve nearby available parking slots using a live map interface.
 
-2. **Entry Procedure**:
-   - Upon arrival, the user logs into the website and selects the option to lift the barricade.
-   - The IR sensor detects the presence of the car.
-   - If the car is detected, the Arduino receives a signal to lift the barricade.
-   - If no car is detected, the barricade remains closed.
+- 💳 **Online Payment Integration**
+  - Users can securely pay booking fees via **Razorpay** (₹50 for 3 hours, ₹20/hour post free hour).
 
-3. **Exit Procedure**:
-   - Users can exit the parking lot after paying any additional charges (20 Rs per hour after the first free hour).
-   - Once the payment is confirmed, the website sends a signal to the Arduino to lift the exit barricade.
+- 🤖 **IoT-Based Hardware Integration**
+  - Real-time slot validation via **IR sensors**, **servo-controlled barricades**, and **Arduino+NodeMCU** communication with the server.
 
-## Backend Integration
+---
 
-The backend of the Smart Parking System is responsible for managing user interactions, processing reservations and payments, and facilitating communication between the website and the Arduino. The following sections outline the key components and processes involved in the backend integration.
+## 🧰 Tech Stack
 
-### Technologies Used
-- **Node.js / Flask / Django**: Choose a backend framework suitable for handling HTTP requests and managing application logic.
-- **Express.js (if using Node.js)**: For setting up the server and routing.
-- **Database**: MySQL, MongoDB, or another suitable database to store user data, reservations, and payment information.
-- **Axios or Fetch API**: For making HTTP requests from the frontend to the backend.
+### 🖥 Frontend
+
+- **React.js** – For responsive, dynamic UI
+- **CSS** – Custom styles and layout
+- **Axios** – For making API requests to the backend
+
+### ⚙️ Backend
+
+- **Node.js** – Runtime environment
+- **Express.js** – Web framework for building REST APIs
+- **PostgreSQL** – Relational database to manage users, bookings, payments
+- **JWT (JSON Web Tokens)** – Authentication & session management
+- **Bcrypt.js** – For password encryption
+- **Razorpay** – For secure payment processing
+
+### 🔌 IoT Hardware Components
+
+- **Arduino UNO** – Microcontroller for controlling gate mechanisms
+- **NodeMCU (ESP8266)** – For enabling WiFi-based communication with the server
+- **IR Sensors** – For vehicle detection at entry/exit
+- **Servo Motors** – To raise/lower the gate barricade
+- **Power Supply, Breadboard, Jumper Wires** – Standard prototyping setup
+
+---
+
+## ⚙️ System Workflow
+
+1. **User Flow:**
+   - Register/login on the platform.
+   - View nearby available slots on map.
+   - Reserve a slot (₹50 for 3 hours).
+   - Make payment via Razorpay.
+   - Proceed to the parking spot.
+
+2. **On Arrival (IoT Integration):**
+   - IR sensor detects vehicle at entry.
+   - User clicks “Open Gate” from the website.
+   - Signal sent to NodeMCU → Arduino.
+   - Servo motor lifts barricade automatically.
+
+3. **On Exit:**
+   - System calculates time stayed.
+   - User pays extra if over 1 free hour (₹20/hr).
+   - Upon payment, exit gate opens.
+
+---
+
+## 🛠️ Setup Instructions
+
+### 🔧 Prerequisites
+
+- [Node.js](https://nodejs.org/)
+- [PostgreSQL](https://www.postgresql.org/) database setup
+- [Arduino IDE](https://www.arduino.cc/en/software) for uploading firmware to hardware
 
 ## Conclusion
 Integrating the backend with the Arduino enhances the Smart Parking System by providing a robust mechanism for user management, reservation handling, and real-time communication with the hardware. This integration ensures a seamless experience for users, allowing them to easily interact with the system through the website.
